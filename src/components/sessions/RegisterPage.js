@@ -109,7 +109,10 @@ const RegisterPage = () => {
                   minLength={6}
                   style={{ fontSize: "1rem", padding: "1rem" }}
                 />
-                <label htmlFor="password" style={{ fontSize: "0.9rem", color: "#555" }}>
+                <label
+                  htmlFor="password"
+                  style={{ fontSize: "0.9rem", color: "#555" }}
+                >
                   Password
                 </label>
               </div>
@@ -118,7 +121,9 @@ const RegisterPage = () => {
               <div className="form-floating">
                 <input
                   type="password"
-                  className={`form-control border-warning ${formErrorMessage.confirmPassword ? "is-invalid" : ""}`}
+                  className={`form-control border-warning ${
+                    formErrorMessage.confirmPassword ? "is-invalid" : ""
+                  }`}
                   id="confirmPassword"
                   name="confirmPassword"
                   placeholder="Confirm Password"
@@ -127,7 +132,10 @@ const RegisterPage = () => {
                   minLength={6}
                   style={{ fontSize: "1rem", padding: "1rem" }}
                 />
-                <label htmlFor="confirmPassword" style={{ fontSize: "0.9rem", color: "#555" }}>
+                <label
+                  htmlFor="confirmPassword"
+                  style={{ fontSize: "0.9rem", color: "#555" }}
+                >
                   Confirm Password
                 </label>
                 {formErrorMessage.confirmPassword && (

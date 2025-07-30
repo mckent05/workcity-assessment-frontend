@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { createClient, fetchClient, updateClientAPI } from "../store/clients/thunkCreators";
+import {
+  createClient,
+  fetchClient,
+  updateClientAPI,
+} from "../store/clients/thunkCreators";
 
 const AddNewClientPage = () => {
   const dispatch = useDispatch();
@@ -16,8 +20,8 @@ const AddNewClientPage = () => {
   });
 
   useEffect(() => {
-    if(Object.keys(client).length === 0) {
-      dispatch(fetchClient(id))
+    if (id && Object.keys(client).length === 0) {
+      dispatch(fetchClient(id));
     }
     if (id && client) {
       setFormDetails({
@@ -37,7 +41,9 @@ const AddNewClientPage = () => {
     e.preventDefault();
     try {
       if (id) {
-        await dispatch(updateClientAPI({ ...formDetails, clientId: id })).unwrap();
+        await dispatch(
+          updateClientAPI({ ...formDetails, clientId: id })
+        ).unwrap();
       } else {
         await dispatch(createClient(formDetails)).unwrap();
       }
@@ -75,21 +81,6 @@ const AddNewClientPage = () => {
                 />
               </div>
             ))}
-
-            {/* <div className="form-group mb-4">
-              <label htmlFor="status">Status</label>
-              <select
-                className="form-select"
-                id="status"
-                name="status"
-                value={formDetails.status}
-                onChange={handleChange}
-              >
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-              </select>
-            </div> */}
 
             <button type="submit" className="btn btn-primary w-100">
               {id ? "Update Client" : "Save Client"}

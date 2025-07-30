@@ -8,14 +8,12 @@ import ClientListPage from "./pages/ClientListPage";
 import ClientPage from "./pages/ClientPage";
 import ProjectPage from "./pages/ProjectPage";
 import ProjectListPage from "./pages/ProjectListPage";
-import ProjectDetails from "./pages/ProjectDetails";
 import AddNewProjectPage from "./pages/AddNewProjectPage";
 import AddNewClientPage from "./pages/AddNewClientPage";
 import Main from "./pages/Main";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 
 function App() {
   const sessionDetails = useSelector((state) => state.sessions);
@@ -42,7 +40,8 @@ function App() {
 
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Main />}>
-            <Route index element={<ClientPage />} />
+            <Route index element={<ClientListPage />} />
+
             <Route path="clients" element={<ClientPage />}>
               <Route index element={<ClientListPage />} />
               <Route path=":id" element={<ClientDetailsPage />} />
@@ -50,10 +49,8 @@ function App() {
               <Route path="edit/:id" element={<AddNewClientPage />} />
             </Route>
 
-            {/* Project Routes */}
             <Route path="projects" element={<ProjectPage />}>
               <Route index element={<ProjectListPage />} />
-              <Route path=":id" element={<ProjectDetails />} />
               <Route path="add-new" element={<AddNewProjectPage />} />
               <Route path="edit/:id" element={<AddNewProjectPage />} />
             </Route>

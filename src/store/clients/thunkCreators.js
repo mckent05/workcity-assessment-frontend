@@ -3,7 +3,7 @@ import {
   getClients,
   getClient,
   updateClient,
-  addClient
+  addClient,
 } from "./clientSlice";
 import { getToken, baseURL } from "../utils/sessions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -19,7 +19,7 @@ export const fetchClients = createAsyncThunk(
       const response = await fetch(`${baseURL}/clients`, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -80,7 +80,7 @@ export const createClient = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({name, email, phone}),
+        body: JSON.stringify({ name, email, phone }),
       });
 
       const data = await response.json();
@@ -115,7 +115,7 @@ export const updateClientAPI = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({name, email, phone}),
+        body: JSON.stringify({ name, email, phone }),
       });
 
       const data = await response.json();

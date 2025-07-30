@@ -4,7 +4,7 @@ import {
   getProject,
   updateProject,
   addProject,
-  getProjectsByClient
+  getProjectsByClient,
 } from "./projectSlice";
 import { getToken, baseURL } from "../utils/sessions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -20,7 +20,7 @@ export const fetchProjects = createAsyncThunk(
       const response = await fetch(`${baseURL}/projects`, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -43,12 +43,15 @@ export const fetchProjectsByClient = createAsyncThunk(
     dispatch(handleLoading(true));
 
     try {
-      const response = await fetch(`${baseURL}/projects/by-clients/${clientId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${baseURL}/projects/by-client/${clientId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = await response.json();
 
@@ -97,8 +100,6 @@ export const createProject = createAsyncThunk(
   async (newProject, { dispatch, rejectWithValue }) => {
     const token = getToken();
 
-    // dispatch(handleLoading(true));
-    console.log(newProject)
     try {
       const response = await fetch(`${baseURL}/projects`, {
         method: "POST",
@@ -141,7 +142,7 @@ export const updateProjectAPI = createAsyncThunk(
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({title, description, status}),
+        body: JSON.stringify({ title, description, status }),
       });
 
       const data = await response.json();

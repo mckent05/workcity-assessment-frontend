@@ -17,7 +17,7 @@ const projectSlice = createSlice({
     getProjects: (state, action) => {
       state.projects = action.payload;
     },
-     getProjectsByClient: (state, action) => {
+    getProjectsByClient: (state, action) => {
       state.projectsByClient = action.payload;
     },
     getProject: (state, action) => {
@@ -36,6 +36,12 @@ const projectSlice = createSlice({
   },
 });
 
-export const { handleLoading, getProjects, getProject, addProject, updateProject, getProjectsByClient } =
-  projectSlice.actions;
+export const {
+  handleLoading,
+  getProjects,
+  getProject,
+  addProject,
+  updateProject,
+  getProjectsByClient,
+} = projectSlice.actions;
 export default projectSlice.reducer;

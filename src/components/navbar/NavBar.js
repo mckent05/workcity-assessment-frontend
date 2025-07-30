@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { handleSignOut } from "../../store/sessions/thunkCreators";
 
 const NavBar = () => {
@@ -17,31 +17,15 @@ const NavBar = () => {
   };
 
   return (
-    <nav
-      className="d-flex justify-content-between align-items-center w-100 p-3 bg-white"
-      style={{
-        boxShadow: "3px 5px 20px rgba(0, 0, 0, 0.04)",
-      }}
-    >
-      <h1>Customer Support Portal</h1>
-      {/* <h2>
-        Logged in: {user.role === "agent" ? "Agent - " : "User - "}
-        <span>{user.email ? user.email : ""}</span>
-      </h2> */}
-      <button
-        className="btn text-white"
-        onClick={signOut}
-        style={{
-          backgroundColor: "#f9a109",
-          borderRadius: "0.75rem",
-          fontSize: "16px",
-          fontWeight: 700,
-          fontFamily: "QuickSand, sans-serif",
-          transform: "translateX(-50%)",
-        }}
-      >
-        Logout
-      </button>
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-3">
+      <div className="container-fluid">
+        <span className="navbar-brand fw-bold fs-4">WorkCity Portal</span>
+        <div className="d-flex">
+          <button className="btn btn-warning fw-bold px-4" onClick={signOut}>
+            Logout
+          </button>
+        </div>
+      </div>
     </nav>
   );
 };
