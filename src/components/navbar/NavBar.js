@@ -19,7 +19,7 @@ const NavBar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-3">
       <div className="container-fluid">
-        <span className="navbar-brand fw-bold fs-4">WorkCity Portal</span>
+        <a href="/" className="navbar-brand fw-bold fs-4">WorkCity Portal</a>
         <div className="d-flex">
           <button className="btn btn-warning fw-bold px-4" onClick={signOut}>
             Logout
