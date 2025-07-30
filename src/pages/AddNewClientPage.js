@@ -1,176 +1,103 @@
-import React, { useState } from "react";
-// import {
-//   Container,
-//   Typography,
-//   TextField,
-//   Button,
-//   Box,
-//   Grid,
-//   Paper,
-//   IconButton,
-// } from "@mui/material";
-// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-// import UploadFileIcon from "@mui/icons-material/UploadFile";
-// import SendIcon from "@mui/icons-material/Send";
-// import { useDispatch } from "react-redux";
-// import { useNavigate } from "react-router-dom";
-// import { createTicket } from "../store/tickets/thunkCreators";
-import axios from "axios";
-import { toast } from "react-toastify";
-
-const instance = axios.create();
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { createClient, fetchClient, updateClientAPI } from "../store/clients/thunkCreators";
 
 const AddNewClientPage = () => {
-  // const [newTicket, setNewTicket] = useState({
-  //   title: "",
-  //   complaint: "",
-  //   image: null,
-  // });
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { client } = useSelector((state) => state.clients);
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setNewTicket((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
+  const [formDetails, setFormDetails] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
 
-  // const uploadPicture = async (file) => {
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-  //   formData.append("upload_preset", "sd31ytp8");
-  //   const { data } = await instance.post(
-  //     "https://api.cloudinary.com/v1_1/duj88gras/image/upload",
-  //     formData
-  //   );
-  //   return data;
-  // };
+  useEffect(() => {
+    if(Object.keys(client).length === 0) {
+      dispatch(fetchClient(id))
+    }
+    if (id && client) {
+      setFormDetails({
+        name: client.name || "",
+        email: client.email || "",
+        phone: client.phone || "",
+      });
+    }
+  }, [id, client]);
 
-  // const handleFileChange = async (e) => {
-  //   const img = e.target.files[0];
-  //   const response = await uploadPicture(img);
-  //   if (response.url) {
-  //     toast.success("Image uploaded!");
-  //     setNewTicket((prev) => ({
-  //       ...prev,
-  //       image: response.url,
-  //     }));
-  //   } else {
-  //     toast.error("Error uploading image");
-  //   }
-  // };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormDetails((prev) => ({ ...prev, [name]: value }));
+  };
 
-  // const onSubmit = async (e) => {
-  //   e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (id) {
+        await dispatch(updateClientAPI({ ...formDetails, clientId: id })).unwrap();
+      } else {
+        await dispatch(createClient(formDetails)).unwrap();
+      }
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  //   const result = await dispatch(createTicket(newTicket));
-  //   if (createTicket.fulfilled.match(result)) {
-  //     navigate("/");
-  //   }
-
-  //   setNewTicket({ title: "", complaint: "", attachment: null });
-  // };
+  const formFields = [
+    { label: "Name", name: "name", type: "text" },
+    { label: "Email", name: "email", type: "email" },
+    { label: "Phone", name: "phone", type: "text" },
+  ];
 
   return (
-    // <Container maxWidth="sm" sx={{ mt: 5 }}>
-    //   <Paper elevation={3} sx={{ p: 4 }}>
-    //     {/* Header */}
-    //     <Box display="flex" alignItems="center" mb={2}>
-    //       <IconButton onClick={() => navigate(-1)} sx={{ mr: 1 }}>
-    //         <ArrowBackIcon sx={{ color: "#f9a109" }} />
-    //       </IconButton>
-    //       <Typography variant="h5" component="h2">
-    //         Submit a Support Ticket
-    //       </Typography>
-    //     </Box>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6 col-lg-5">
+          <h2 className="text-center mb-4 fw-bold">
+            {id ? "Edit Client" : "Add Client"}
+          </h2>
+          <form onSubmit={handleSubmit}>
+            {formFields.map(({ label, name, type }) => (
+              <div className="form-group mb-3" key={name}>
+                <label htmlFor={name}>{label}</label>
+                <input
+                  type={type}
+                  className="form-control"
+                  id={name}
+                  name={name}
+                  value={formDetails[name]}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            ))}
 
-    //     <form onSubmit={onSubmit}>
-    //       <Grid container spacing={3}>
-    //         <Grid item xs={12}>
-    //           <TextField
-    //             fullWidth
-    //             label="Ticket Title"
-    //             name="title"
-    //             value={newTicket.title}
-    //             onChange={handleChange}
-    //             required
-    //           />
-    //         </Grid>
+            {/* <div className="form-group mb-4">
+              <label htmlFor="status">Status</label>
+              <select
+                className="form-select"
+                id="status"
+                name="status"
+                value={formDetails.status}
+                onChange={handleChange}
+              >
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div> */}
 
-    //         <Grid item xs={12}>
-    //           <TextField
-    //             fullWidth
-    //             multiline
-    //             minRows={3}
-    //             label="Complaint"
-    //             name="complaint"
-    //             value={newTicket.complaint}
-    //             onChange={handleChange}
-    //             required
-    //           />
-    //         </Grid>
-
-    //         <Grid item xs={12}>
-    //           <Typography variant="body2" gutterBottom>
-    //             Upload File (Only .png, .jpg below 2MB)
-    //           </Typography>
-    //           <Button
-    //             variant="outlined"
-    //             component="label"
-    //             startIcon={<UploadFileIcon />}
-    //           >
-    //             Choose File
-    //             <input
-    //               type="file"
-    //               name="attachment"
-    //               accept=".png,.jpg"
-    //               onChange={handleFileChange}
-    //               hidden
-    //             />
-    //           </Button>
-    //         </Grid>
-
-    //         <Grid
-    //           item
-    //           xs={12}
-    //           width="100%"
-    //           display="flex"
-    //           justifyContent="space-between"
-    //         >
-    //           <Button
-    //             variant="outlined"
-    //             startIcon={<ArrowBackIcon />}
-    //             onClick={() => navigate(-1)}
-    //             sx={{
-    //               color: "#f9a109",
-    //               borderColor: "#f9a109",
-    //               textTransform: "none",
-    //             }}
-    //           >
-    //             Go Back
-    //           </Button>
-    //           <Button
-    //             type="submit"
-    //             variant="contained"
-    //             endIcon={<SendIcon />}
-    //             sx={{
-    //               backgroundColor: "#f9a109",
-    //               "&:hover": {
-    //                 backgroundColor: "#e78f00",
-    //               },
-    //               textTransform: "none",
-    //             }}
-    //           >
-    //             Submit
-    //           </Button>
-    //         </Grid>
-    //       </Grid>
-    //     </form>
-    //   </Paper>
-    // </Container>
-    <h1>Add New Client</h1>
+            <button type="submit" className="btn btn-primary w-100">
+              {id ? "Update Client" : "Save Client"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 

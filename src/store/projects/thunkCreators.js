@@ -1,90 +1,164 @@
 import {
   handleLoading,
-  userSignUp,
-  userSignIn,
-  userSignOut,
-} from "./sessionSlice";
-import { clearSession, getToken, baseURL } from "../utils/sessions";
+  getProjects,
+  getProject,
+  updateProject,
+  addProject,
+  getProjectsByClient
+} from "./projectSlice";
+import { getToken, baseURL } from "../utils/sessions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-export const handleSignIn = createAsyncThunk(
-  "user/login",
-  async (user, { dispatch }) => {
-    const { email, password } = user;
-    const loginDetails = { user: { email, password } };
+export const fetchProjects = createAsyncThunk(
+  "get/projects",
+  async (_, { dispatch, rejectWithValue }) => {
+    const token = getToken();
     dispatch(handleLoading(true));
-    const postDetails = await fetch(`${baseURL}/users/sign_in`, {
-      method: "POST",
-      body: JSON.stringify(loginDetails),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const response = await postDetails.json();
-    const token = postDetails.headers.get("Authorization");
-    if (token) {
-      localStorage.setItem("user-token", JSON.stringify(token));
-      localStorage.setItem("session", true);
-      dispatch(userSignIn());
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
+
+    try {
+      const response = await fetch(`${baseURL}/projects`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      dispatch(getProjects(data.data));
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    } finally {
+      dispatch(handleLoading(false));
     }
-    dispatch(handleLoading(false));
   }
 );
 
-export const handleSignUp = createAsyncThunk(
-  "user/register",
-  async (user, { dispatch }) => {
-    const { username, password, email, firstName, lastName, role } = user;
-    const registerDetails = {
-      user: {
-        username,
-        email,
-        password,
-        first_name: firstName,
-        last_name: lastName,
-        role: role,
-      },
-    };
+export const fetchProjectsByClient = createAsyncThunk(
+  "get/projectsByClient",
+  async (clientId, { dispatch, rejectWithValue }) => {
+    const token = getToken();
     dispatch(handleLoading(true));
-    const postDetails = await fetch(`${baseURL}/users`, {
-      method: "POST",
-      body: JSON.stringify(registerDetails),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const serverResponse = await postDetails.json();
-    if (serverResponse.status === 200) {
-      dispatch(userSignUp(true));
-      toast.success(serverResponse.message);
-    } else {
-      dispatch(userSignUp(false));
-      toast.error(serverResponse.message);
+
+    try {
+      const response = await fetch(`${baseURL}/projects/by-clients/${clientId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      dispatch(getProjectsByClient(data.data));
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    } finally {
+      dispatch(handleLoading(false));
     }
-    dispatch(handleLoading(false));
   }
 );
 
-export const handleSignOut = createAsyncThunk(
-  "user/sign_out",
-  async (_, { dispatch }) => {
-    const userToken = getToken();
+export const fetchProject = createAsyncThunk(
+  "get/Project/id",
+  async (id, { dispatch, rejectWithValue }) => {
+    const token = getToken();
     dispatch(handleLoading(true));
-    const details = await fetch(`${baseURL}/users/sign_out`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userToken,
-      },
-    });
-    const response = await details.json();
-    dispatch(userSignOut());
-    clearSession();
-    toast.success(response.message);
-    dispatch(handleLoading(false));
+
+    try {
+      const response = await fetch(`${baseURL}/projects/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.errors) {
+        throw new Error(data.error);
+      }
+
+      dispatch(getProject(data.data));
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  }
+);
+
+export const createProject = createAsyncThunk(
+  "new/Project",
+  async (newProject, { dispatch, rejectWithValue }) => {
+    const token = getToken();
+
+    // dispatch(handleLoading(true));
+    console.log(newProject)
+    try {
+      const response = await fetch(`${baseURL}/projects`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newProject),
+      });
+
+      const data = await response.json();
+
+      if (data.errors) {
+        const error = data.error;
+        toast.error(error);
+        throw new Error(error);
+      }
+
+      dispatch(addProject(data.data));
+      toast.success("New Project Created!");
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateProjectAPI = createAsyncThunk(
+  "update/project",
+  async (projectUpdate, { dispatch, rejectWithValue }) => {
+    const { projectId, title, description, status } = projectUpdate;
+    const token = getToken();
+
+    dispatch(handleLoading(true));
+
+    try {
+      const response = await fetch(`${baseURL}/projects/${projectId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({title, description, status}),
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        const error = data.error;
+        toast.error(error);
+        throw new Error(error);
+      }
+
+      dispatch(updateProject(data.data));
+      toast.success("Project Updated!");
+      return data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    } finally {
+      dispatch(handleLoading(false));
+    }
   }
 );

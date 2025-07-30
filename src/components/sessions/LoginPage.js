@@ -71,10 +71,10 @@ const LoginPage = ({ loading, signedIn }) => {
               handle={handleInput}
             />
             <span
-              className="position-absolute end-0 bottom-25 text-warning fw-semibold"
+              className="position-relative bottom-25 text-warning fw-semibold"
               style={{ fontSize: "12px", cursor: "pointer" }}
             >
-              Forgot?
+              Forgot Password?
             </span>
           </div>
 

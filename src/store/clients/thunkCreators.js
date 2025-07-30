@@ -19,7 +19,7 @@ export const fetchClients = createAsyncThunk(
       const response = await fetch(`${baseURL}/clients`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${token}`,
+          "Authorization": `Bearer ${token}`,
         },
       });
 
@@ -45,7 +45,7 @@ export const fetchClient = createAsyncThunk(
       const response = await fetch(`${baseURL}/clients/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${token}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -78,7 +78,7 @@ export const createClient = createAsyncThunk(
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({name, email, phone}),
       });
@@ -100,49 +100,10 @@ export const createClient = createAsyncThunk(
   }
 );
 
-export const postTicketComment = createAsyncThunk(
-  "ticket/comment",
-  async (comment, { dispatch, rejectWithValue }) => {
-    const { ticketId, content } = comment;
-    const token = getToken();
-
-    try {
-      const response = await fetch(`${baseURL}/graphql`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify({
-          query: commentMutation,
-          variables: { input: { ticketId, content } },
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.errors) {
-        const error = data.errors[0].message;
-        toast.error(error);
-        throw new Error(error);
-      }
-
-      dispatch(addComment(data.data.addComment));
-      toast.success("Comment Added!");
-      return data.data.addComment;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-    // finally {
-    //   dispatch(handleLoading(false));
-    // }
-  }
-);
-
-export const updateClient = createAsyncThunk(
+export const updateClientAPI = createAsyncThunk(
   "update/client",
   async (clientUpdate, { dispatch, rejectWithValue }) => {
-    const { clientId, name, email, status } = clientUpdate;
+    const { clientId, name, email, phone } = clientUpdate;
     const token = getToken();
 
     dispatch(handleLoading(true));
@@ -152,9 +113,9 @@ export const updateClient = createAsyncThunk(
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `${token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({name, email, status}),
+        body: JSON.stringify({name, email, phone}),
       });
 
       const data = await response.json();

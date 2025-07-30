@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import store from "./store/configureStore";
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import Bootstrap JavaScript (including Popper.js)
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

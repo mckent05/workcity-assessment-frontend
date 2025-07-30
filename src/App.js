@@ -16,6 +16,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 function App() {
   const sessionDetails = useSelector((state) => state.sessions);
 
@@ -46,6 +47,7 @@ function App() {
               <Route index element={<ClientListPage />} />
               <Route path=":id" element={<ClientDetailsPage />} />
               <Route path="add-new" element={<AddNewClientPage />} />
+              <Route path="edit/:id" element={<AddNewClientPage />} />
             </Route>
 
             {/* Project Routes */}
@@ -53,6 +55,7 @@ function App() {
               <Route index element={<ProjectListPage />} />
               <Route path=":id" element={<ProjectDetails />} />
               <Route path="add-new" element={<AddNewProjectPage />} />
+              <Route path="edit/:id" element={<AddNewProjectPage />} />
             </Route>
           </Route>
         </Route>

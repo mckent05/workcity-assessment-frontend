@@ -5,7 +5,7 @@ const Navigation = ({ text, push, btnText }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="d-flex flex-column flex-lg-row align-items-center justify-content-lg-end gap-3 w-75 mx-auto" style={{ minHeight: "10vh", margin: "10px auto" }}>
+    <div className="d-flex flex-column flex-lg-column align-items-center justify-content-lg-end gap-3 w-75 mx-auto" style={{ minHeight: "10vh", margin: "10px auto" }}>
       <span
         className="text-muted"
         style={{

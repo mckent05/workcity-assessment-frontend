@@ -14,7 +14,7 @@ export const handleSignIn = createAsyncThunk(
     const { email, password } = user;
     const loginDetails = { email, password };
     dispatch(handleLoading(true));
-    const postDetails = await fetch(`${baseURL}/api/v1/auth/login`, {
+    const postDetails = await fetch(`${baseURL}/auth/login`, {
       method: "POST",
       body: JSON.stringify(loginDetails),
       headers: {
@@ -47,7 +47,7 @@ export const handleSignUp = createAsyncThunk(
       role,
     };
     dispatch(handleLoading(true));
-    const postDetails = await fetch(`${baseURL}/api/v1/auth/register`, {
+    const postDetails = await fetch(`${baseURL}/auth/register`, {
       method: "POST",
       body: JSON.stringify(registerDetails),
       headers: {

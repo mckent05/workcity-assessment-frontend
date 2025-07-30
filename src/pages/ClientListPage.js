@@ -1,14 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-// import Header from "../components/TicketList/Header";
-// import TicketsTable from "../components/TicketList/TicketsTable";
-// import { Fab, Box, Container, Button } from "@mui/material";
-// import AddIcon from "@mui/icons-material/Add";
-// import { downloadClosedTickets } from "../store/tickets/thunkCreators";
 
 const ClientListPage = () => {
-  // const { tickets } = useSelector((state) => state.tickets);
+  const { clients } = useSelector((state) => state.clients);
   // const { user } = useSelector((state) => state.user);
 
   // const navigate = useNavigate();
@@ -17,7 +12,7 @@ const ClientListPage = () => {
 
   // const handleDownloadCSV = async () => {
   //   const result = await dispatch(downloadClosedTickets());
-  
+
   //   if (downloadClosedTickets.fulfilled.match(result)) {
   //     const csvContent = result.payload;
   //     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -35,64 +30,34 @@ const ClientListPage = () => {
   // };
 
   return (
-    <div>
-      ClientListPage
+    <div className="container py-4">
+      <div className="d-flex justify-content-between">
+        <h2 className="h4 fw-bold mb-4">Client Dashboard</h2>
+
+        <a href="/clients/add-new" className="btn btn-primary mb-4">
+          Add Client
+        </a>
+      </div>
+
+      <div className="row g-4">
+        {clients.map((client) => (
+          <div key={client._id} className="col-12 col-md-6 col-lg-4">
+            <div className="card h-100 shadow-sm">
+              <div className="card-body">
+                <h5 className="card-title">{client.name}</h5>
+                <p className="card-text">{client.email}</p>
+                <a
+                  href={`/clients/${client._id}`}
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  View Profile
+                </a>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
-    // <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-    //   <Header role={user.role} />
-    //   <Box
-    //     display="flex"
-    //     justifyContent="space-between"
-    //     alignItems="center"
-    //     mt={2}
-    //     mb={4}
-    //   >
-    //     {user.role === "agent" && (
-    //       <Button
-    //         variant="contained"
-    //         onClick={handleDownloadCSV}
-    //         sx={{
-    //           backgroundColor: "#f9a109",
-    //           "&:hover": {
-    //             backgroundColor: "#e78f00",
-    //           },
-    //           textTransform: "none",
-    //           fontWeight: 500,
-    //           margin: "auto"
-    //         }}
-    //       >
-    //         Export Closed Tickets
-    //       </Button>
-    //     )}
-    //   </Box>
-    //   <Box
-    //     display="flex"
-    //     justifyContent="center"
-    //     alignItems="center"
-    //     mt={5}
-    //     mb={5}
-    //   >
-    //     <TicketsTable tickets={tickets} role={user.role} />
-    //   </Box>
-    //   {user.role === "customer" && (
-    //     <Fab
-    //       color="primary"
-    //       aria-label="add"
-    //       onClick={() => navigate("/new-ticket")}
-    //       sx={{
-    //         position: "fixed",
-    //         bottom: 32,
-    //         right: 32,
-    //         backgroundColor: "#f9a109",
-    //         "&:hover": {
-    //           backgroundColor: "#e78f00",
-    //         },
-    //       }}
-    //     >
-    //       <AddIcon />
-    //     </Fab>
-    //   )}
-    // </Container>
   );
 };
 
