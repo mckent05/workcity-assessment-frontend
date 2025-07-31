@@ -4,6 +4,7 @@ import {
   userSignIn,
   userSignOut,
 } from "./sessionSlice";
+import { getUser } from "../user/userSlice";
 import { clearSession, getToken, baseURL } from "../utils/sessions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
@@ -27,6 +28,8 @@ export const handleSignIn = createAsyncThunk(
       localStorage.setItem("user-token", JSON.stringify(token));
       localStorage.setItem("session", true);
       dispatch(userSignIn());
+      dispatch(getUser(response.user))
+      localStorage.setItem("role", JSON.stringify(response.user.role));
       toast.success("Signed in sucessfully");
     } else {
       toast.error(response.message);

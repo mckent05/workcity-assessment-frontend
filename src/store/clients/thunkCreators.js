@@ -4,6 +4,7 @@ import {
   getClient,
   updateClient,
   addClient,
+  deleteClient
 } from "./clientSlice";
 import { getToken, baseURL } from "../utils/sessions";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -129,6 +130,40 @@ export const updateClientAPI = createAsyncThunk(
       dispatch(updateClient(data.data));
       toast.success("Client Updated!");
       return data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    } finally {
+      dispatch(handleLoading(false));
+    }
+  }
+);
+
+export const deleteClientAPI = createAsyncThunk(
+  "delete/client",
+  async (id, { dispatch, rejectWithValue }) => {
+    const token = getToken();
+
+    dispatch(handleLoading(true));
+
+    try {
+      const response = await fetch(`${baseURL}/clients/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        const error = data.error;
+        toast.error(error);
+        throw new Error(error);
+      }
+
+      dispatch(deleteClient(id));
+      toast.success("Client Deleted!");
     } catch (error) {
       return rejectWithValue(error.message);
     } finally {

@@ -33,6 +33,11 @@ const projectSlice = createSlice({
       );
       state.project = updatedProject;
     },
+     deleteProject: (state, action) => {
+      state.projects = state.projects.filter(
+        (project) => project._id !== action.payload
+      );
+    },
   },
 });
 
@@ -42,6 +47,7 @@ export const {
   getProject,
   addProject,
   updateProject,
+  deleteProject,
   getProjectsByClient,
 } = projectSlice.actions;
 export default projectSlice.reducer;

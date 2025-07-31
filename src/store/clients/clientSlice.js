@@ -29,9 +29,20 @@ const clientSlice = createSlice({
       );
       state.client = updatedClient;
     },
+    deleteClient: (state, action) => {
+      state.clients = state.clients.filter(
+        (client) => client._id !== action.payload
+      );
+    },
   },
 });
 
-export const { handleLoading, getClients, getClient, addClient, updateClient } =
-  clientSlice.actions;
+export const {
+  handleLoading,
+  getClients,
+  getClient,
+  addClient,
+  updateClient,
+  deleteClient,
+} = clientSlice.actions;
 export default clientSlice.reducer;

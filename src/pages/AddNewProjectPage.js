@@ -7,6 +7,7 @@ import {
   updateProjectAPI,
 } from "../store/projects/thunkCreators";
 import { updateProject } from "../store/projects/projectSlice";
+import { toast } from "react-toastify";
 
 const AddNewProjectPage = () => {
   const dispatch = useDispatch();
@@ -43,6 +44,10 @@ const AddNewProjectPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (clients.length === 0) {
+      toast.error("Please add a Client first");
+      return;
+    }
     try {
       if (id) {
         await dispatch(
